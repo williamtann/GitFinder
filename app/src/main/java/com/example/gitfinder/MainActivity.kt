@@ -8,12 +8,16 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.gitfinder.adapter.RepoListAdapter
 import com.example.gitfinder.databinding.ActivityMainBinding
+import com.example.gitfinder.datamodel.Repo
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
+    private lateinit var listAdapter: RepoListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +25,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        listAdapter = RepoListAdapter(this, object : RepoListAdapter.ItemClickListener {
+
+            override fun onItemClick(repo: Repo) {
+                Toast.makeText(this@MainActivity, "Repo clicked: ${repo.name}", Toast.LENGTH_SHORT).show()
+            }
+        })
+        binding.recyclerView.adapter = listAdapter
 
         binding.buttonSearch.setOnClickListener {
             val textInput = binding.editText.text.toString().trim()
@@ -47,16 +60,25 @@ class MainActivity : AppCompatActivity() {
     private fun initObservation() {
         viewModel.searchEnabled.observe(this, Observer {
             if (it) {
+                binding.recyclerView.visibility = View.GONE
+                binding.textView.visibility = View.VISIBLE
                 binding.textView.text = "Searching repo with keyword: ${viewModel.keyword.value}"
             } else {
                 Toast.makeText(this, "Please input the search keyword", Toast.LENGTH_SHORT).show()
             }
         })
-        viewModel.searchResult.observe(this, Observer {
-            binding.textView.text = "Repo found: $it"
-        })
         viewModel.searchHistory.observe(this, Observer {
             binding.textHistory.text = it
+        })
+        viewModel.reposFound.observe(this, Observer {
+            binding.recyclerView.visibility = View.VISIBLE
+            binding.textView.visibility = View.GONE
+            listAdapter.data = it
+            listAdapter.notifyDataSetChanged()
+        })
+        viewModel.networkError.observe(this, Observer {
+            binding.textView.visibility = View.GONE
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         })
     }
 }
