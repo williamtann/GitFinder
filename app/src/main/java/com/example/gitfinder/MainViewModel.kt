@@ -1,9 +1,13 @@
 package com.example.gitfinder
 
+import androidx.arch.core.util.Function
 import androidx.lifecycle.*
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.example.gitfinder.datamodel.Repo
 import com.example.gitfinder.model.RepoSearchResult
 import com.example.gitfinder.service.RemoteService
+import com.example.gitfinder.service.RepoDataFactory
 
 class MainViewModel: ViewModel() {
 
@@ -16,14 +20,21 @@ class MainViewModel: ViewModel() {
     val searchEnabled: LiveData<Boolean> = Transformations.map(_keyword) { keyword -> !keyword.isNullOrEmpty() }
     val searchHistory = MediatorLiveData<String>()
 
-    private val searchResult: LiveData<RepoSearchResult> = Transformations.map(_keyword) { repository.searchRepo(it) }
-    val reposFound: LiveData<List<Repo>> = Transformations.switchMap(searchResult) { it.data }
-    val networkError: LiveData<String> = Transformations.switchMap(searchResult) { it.networkError }
+    private val searchResult: LiveData<RepoSearchResult?> = Transformations.map(_keyword) { keyword ->
+        if (keyword.isNotEmpty()) {
+            return@map repository.searchPagedRepo(keyword)
+        }
+        return@map null
+    }
+    val reposFound: LiveData<PagedList<Repo>> = Transformations.switchMap(searchResult) { it?.data }
+    val networkError: LiveData<String> = Transformations.switchMap(searchResult) { it?.networkError }
 
     init {
         searchHistory.value = "Search History:\n\n"
         searchHistory.addSource(_keyword) {
-            searchHistory.value += "Keyword: $it\n"
+            if (it.isNotEmpty()) {
+                searchHistory.value += "Keyword: $it\n"
+            }
         }
         searchHistory.addSource(reposFound) {
             searchHistory.value += "Repos Found: ${it.size}\n"

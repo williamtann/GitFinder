@@ -1,17 +1,18 @@
 package com.example.gitfinder
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitfinder.adapter.RepoListAdapter
 import com.example.gitfinder.databinding.ActivityMainBinding
 import com.example.gitfinder.datamodel.Repo
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
         binding.recyclerView.adapter = listAdapter
+        binding.recyclerView.itemAnimator = null
 
         binding.buttonSearch.setOnClickListener {
             val textInput = binding.editText.text.toString().trim()
@@ -71,10 +73,13 @@ class MainActivity : AppCompatActivity() {
             binding.textHistory.text = it
         })
         viewModel.reposFound.observe(this, Observer {
-            binding.recyclerView.visibility = View.VISIBLE
-            binding.textView.visibility = View.GONE
-            listAdapter.data = it
-            listAdapter.notifyDataSetChanged()
+            if (it.isNotEmpty()) {
+                binding.recyclerView.visibility = View.VISIBLE
+                binding.textView.visibility = View.GONE
+                listAdapter.submitList(it)
+            } else {
+                binding.textView.text = "No result found, please search with another keyword"
+            }
         })
         viewModel.networkError.observe(this, Observer {
             binding.textView.visibility = View.GONE
