@@ -2,6 +2,7 @@ package com.example.gitfinder.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -30,6 +31,12 @@ class RepoListAdapter constructor(
 
         binding.textName.text = repo.name
         binding.textFullName.text = repo.fullName
+        if (repo.description.isNullOrEmpty()) {
+            binding.textDescription.visibility = View.GONE
+        } else {
+            binding.textDescription.visibility = View.VISIBLE
+            binding.textDescription.text = repo.description
+        }
 
         binding.root.setOnClickListener { listener.onItemClick(repo) }
     }
