@@ -2,6 +2,7 @@ package com.example.gitfinder
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.gitfinder.databinding.ActivityMainBinding
 
@@ -17,14 +18,13 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        if (!viewModel.keyword.isNullOrEmpty()) {
-            binding.textView.text = "Searching with keyword: ${viewModel.keyword}"
-        }
-
         binding.buttonSearch.setOnClickListener {
             val inputtedValue = binding.editText.text.toString().trim()
-            binding.textView.text = "Searching with keyword: $inputtedValue"
-            viewModel.keyword = inputtedValue
+            viewModel.updateKeyword(inputtedValue)
         }
+
+        viewModel.keyword.observe(this, Observer { keyword ->
+            binding.textView.text = "Searching with keyword: $keyword"
+        })
     }
 }

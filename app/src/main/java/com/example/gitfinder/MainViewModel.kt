@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModel
 
 class MainViewModel: ViewModel() {
 
-//    var keyword: String? = null
-
     private val _keyword: MutableLiveData<String> = MutableLiveData()
     val keyword: LiveData<String>
         get() = _keyword
