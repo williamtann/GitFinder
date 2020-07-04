@@ -2,6 +2,7 @@ package com.example.gitfinder
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 
 class MainViewModel: ViewModel() {
@@ -12,5 +13,9 @@ class MainViewModel: ViewModel() {
 
     fun updateKeyword(input: String) {
         _keyword.value = input
+    }
+
+    val searchEnabled: LiveData<Boolean> = Transformations.map(_keyword) { keyword ->
+        !keyword.isNullOrEmpty()
     }
 }

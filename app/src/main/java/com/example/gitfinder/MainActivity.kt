@@ -2,6 +2,7 @@ package com.example.gitfinder
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.gitfinder.databinding.ActivityMainBinding
@@ -23,8 +24,12 @@ class MainActivity : AppCompatActivity() {
             viewModel.updateKeyword(inputtedValue)
         }
 
-        viewModel.keyword.observe(this, Observer { keyword ->
-            binding.textView.text = "Searching with keyword: $keyword"
+        viewModel.searchEnabled.observe(this, Observer { searchEnabled ->
+            if (searchEnabled) {
+                binding.textView.text = "Searching with keyword: ${viewModel.keyword.value}"
+            } else {
+                Toast.makeText(this, "Please input the search keyword", Toast.LENGTH_SHORT).show()
+            }
         })
     }
 }
