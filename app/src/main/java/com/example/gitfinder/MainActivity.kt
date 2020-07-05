@@ -31,5 +31,9 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please input the search keyword", Toast.LENGTH_SHORT).show()
             }
         })
+
+        viewModel.searchResult.observe(this, Observer { repoName ->
+            binding.textView.text = "Repo found: $repoName"
+        })
     }
 }
