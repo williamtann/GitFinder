@@ -1,9 +1,6 @@
 package com.example.gitfinder
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 
 class MainViewModel: ViewModel() {
 
@@ -23,5 +20,18 @@ class MainViewModel: ViewModel() {
 
     val searchResult: LiveData<String> = Transformations.switchMap(_keyword) { keyword ->
         repository.searchRepo(keyword)
+    }
+
+    val searchHistory = MediatorLiveData<String>()
+
+    init {
+        searchHistory.value = "Search History: \n\n"
+        searchHistory.addSource(_keyword) { keyword ->
+            searchHistory.value += "Keyword: $keyword\n"
+        }
+
+        searchHistory.addSource(searchResult) { searchResult ->
+            searchHistory.value += "Result: $searchResult\n"
+        }
     }
 }

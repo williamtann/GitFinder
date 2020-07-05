@@ -2,6 +2,9 @@ package com.example.gitfinder
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -35,5 +38,23 @@ class MainActivity : AppCompatActivity() {
         viewModel.searchResult.observe(this, Observer { repoName ->
             binding.textView.text = "Repo found: $repoName"
         })
+
+        viewModel.searchHistory.observe(this, Observer { searchHistory ->
+            binding.textHistory.text = searchHistory
+        })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.history) {
+            binding.textHistory.visibility =
+                if (binding.textHistory.visibility == View.GONE) View.VISIBLE
+                else View.GONE
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
