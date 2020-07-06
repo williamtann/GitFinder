@@ -1,10 +1,13 @@
 package com.example.gitfinder
 
 import androidx.lifecycle.*
+import com.example.gitfinder.datamodel.Repo
+import com.example.gitfinder.service.RemoteService
+import com.example.gitfinder.viewmodel.RepoSearchResult
 
 class MainViewModel: ViewModel() {
 
-    private val repository = MainRepository()
+    private val repository = MainRepository(RemoteService.create())
 
     private val _keyword: MutableLiveData<String> = MutableLiveData()
     val keyword: LiveData<String>
@@ -18,9 +21,11 @@ class MainViewModel: ViewModel() {
         !keyword.isNullOrEmpty()
     }
 
-    val searchResult: LiveData<String> = Transformations.switchMap(_keyword) { keyword ->
+    private val searchResult: LiveData<RepoSearchResult> = Transformations.map(_keyword) { keyword ->
         repository.searchRepo(keyword)
     }
+    val repoFound: LiveData<List<Repo>> = Transformations.switchMap(searchResult) { result -> result.data }
+    val networkError: LiveData<String> = Transformations.switchMap(searchResult) { result -> result.networkError }
 
     val searchHistory = MediatorLiveData<String>()
 
@@ -30,8 +35,8 @@ class MainViewModel: ViewModel() {
             searchHistory.value += "Keyword: $keyword\n"
         }
 
-        searchHistory.addSource(searchResult) { searchResult ->
-            searchHistory.value += "Result: $searchResult\n"
+        searchHistory.addSource(repoFound) { searchResult ->
+            searchHistory.value += "Result: ${searchResult.size}\n"
         }
     }
 }

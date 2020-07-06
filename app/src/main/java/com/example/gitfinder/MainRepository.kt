@@ -1,20 +1,38 @@
 package com.example.gitfinder
 
-import android.os.Handler
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.gitfinder.datamodel.Repo
+import com.example.gitfinder.datamodel.RepoSearchResponse
+import com.example.gitfinder.viewmodel.RepoSearchResult
+import com.example.gitfinder.service.RemoteService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class MainRepository {
+class MainRepository(private val remoteService: RemoteService) {
 
-    // do a network request that for example takes 3 seconds to return a value
-    fun searchRepo(keyword: String): LiveData<String> {
-        val repoFound = MutableLiveData<String>()
-        if (keyword.isNotEmpty()) {
-            val handler = Handler()
-            handler.postDelayed({
-                repoFound.postValue(keyword + "123")
-            }, 3000)
-        }
-        return repoFound
+    private val networkError = MutableLiveData<String>()
+
+    fun searchRepo(query: String): RepoSearchResult {
+        val repoFound = MutableLiveData<List<Repo>>()
+
+        remoteService.searchRepo(query).enqueue(object: Callback<RepoSearchResponse> {
+            override fun onFailure(call: Call<RepoSearchResponse>, t: Throwable) {
+                networkError.postValue(t.message ?: "unknown error")
+            }
+
+            override fun onResponse(
+                call: Call<RepoSearchResponse>,
+                response: Response<RepoSearchResponse>
+            ) {
+                if (response.isSuccessful) {
+                    repoFound.postValue(response.body()?.items ?: emptyList())
+                } else {
+                    networkError.postValue(response.errorBody()?.string())
+                }
+            }
+
+        })
+        return RepoSearchResult(repoFound, networkError)
     }
 }
