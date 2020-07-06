@@ -1,9 +1,9 @@
 package com.example.gitfinder
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.gitfinder.databinding.ActivityMainBinding
-
 
 class MainActivity : AppCompatActivity() {
 
