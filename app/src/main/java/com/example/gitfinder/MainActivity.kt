@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         })
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
+        binding.recyclerView.itemAnimator = null
 
         binding.buttonSearch.setOnClickListener {
             val inputtedValue = binding.editText.text.toString().trim()
@@ -50,10 +51,13 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewModel.repoFound.observe(this, Observer { repoList ->
-            binding.recyclerView.visibility = View.VISIBLE
-            binding.textView.visibility = View.GONE
-            adapter.data = repoList
-            adapter.notifyDataSetChanged()
+            if (repoList.isNotEmpty()) {
+                binding.recyclerView.visibility = View.VISIBLE
+                binding.textView.visibility = View.GONE
+                adapter.submitList(repoList)
+            } else {
+                binding.textView.text = "No result found, please try with another keyword"
+            }
         })
 
         viewModel.searchHistory.observe(this, Observer { textHistory ->

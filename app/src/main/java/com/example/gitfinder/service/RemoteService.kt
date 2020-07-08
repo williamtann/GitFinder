@@ -15,7 +15,9 @@ interface RemoteService {
      */
     @GET("/search/repositories")
     fun searchRepo(
-        @Query("q") query: String
+        @Query("q") query: String,
+        @Query("page") page: Int,
+        @Query("per_page") itemsPerPage: Int
     ): Call<RepoSearchResponse>
 
     companion object {

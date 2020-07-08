@@ -1,38 +1,24 @@
 package com.example.gitfinder
 
-import androidx.lifecycle.MutableLiveData
-import com.example.gitfinder.datamodel.Repo
-import com.example.gitfinder.datamodel.RepoSearchResponse
-import com.example.gitfinder.viewmodel.RepoSearchResult
+import androidx.lifecycle.Transformations
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.example.gitfinder.service.RemoteService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.gitfinder.viewmodel.RepoSearchResult
 
 class MainRepository(private val remoteService: RemoteService) {
 
-    private val networkError = MutableLiveData<String>()
-
     fun searchRepo(query: String): RepoSearchResult {
-        val repoFound = MutableLiveData<List<Repo>>()
+        val pagedListConfig = PagedList.Config.Builder()
+            .setInitialLoadSizeHint(20)
+            .setPageSize(10)
+            .build()
+        val dataFactory = RepoDataFactory(remoteService, query)
+        val pagedData = LivePagedListBuilder(dataFactory, pagedListConfig).build()
+        val networkError = Transformations.switchMap(dataFactory.dataSource) { dataSource ->
+            dataSource.networkError
+        }
 
-        remoteService.searchRepo(query).enqueue(object: Callback<RepoSearchResponse> {
-            override fun onFailure(call: Call<RepoSearchResponse>, t: Throwable) {
-                networkError.postValue(t.message ?: "unknown error")
-            }
-
-            override fun onResponse(
-                call: Call<RepoSearchResponse>,
-                response: Response<RepoSearchResponse>
-            ) {
-                if (response.isSuccessful) {
-                    repoFound.postValue(response.body()?.items ?: emptyList())
-                } else {
-                    networkError.postValue(response.errorBody()?.string())
-                }
-            }
-
-        })
-        return RepoSearchResult(repoFound, networkError)
+        return RepoSearchResult(pagedData, networkError)
     }
 }
