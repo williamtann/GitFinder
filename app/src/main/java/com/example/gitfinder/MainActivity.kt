@@ -50,19 +50,23 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewModel.repoFound.observe(this, Observer { repoList ->
-            binding.recyclerView.visibility = View.VISIBLE
-            binding.textView.visibility = View.GONE
-            adapter.data = repoList
-            adapter.notifyDataSetChanged()
+            if (repoList.isNotEmpty()) {
+                binding.recyclerView.visibility = View.VISIBLE
+                binding.textView.visibility = View.GONE
+                adapter.data = repoList
+                adapter.notifyDataSetChanged()
+            } else {
+                binding.textView.text = "No result found, please try with another keyword"
+            }
         })
 
         viewModel.searchHistory.observe(this, Observer { textHistory ->
             binding.textHistory.text = textHistory
         })
 
-        viewModel.networkError.observe(this, Observer { errorCause ->
+        viewModel.networkError.observe(this, Observer { errorMessage ->
             binding.textView.visibility = View.GONE
-            Toast.makeText(this, errorCause, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
         })
     }
 

@@ -24,8 +24,8 @@ class MainViewModel: ViewModel() {
     private val searchResult: LiveData<RepoSearchResult> = Transformations.map(_keyword) { keyword ->
         repository.searchRepo(keyword)
     }
-    val repoFound: LiveData<List<Repo>> = Transformations.switchMap(searchResult) { result -> result.data }
-    val networkError: LiveData<String> = Transformations.switchMap(searchResult) { result -> result.networkError }
+    val repoFound: LiveData<List<Repo>> = Transformations.switchMap(searchResult) { it.data }
+    val networkError: LiveData<String> = Transformations.switchMap(searchResult) { it.networkError }
 
     val searchHistory = MediatorLiveData<String>()
 
@@ -35,8 +35,8 @@ class MainViewModel: ViewModel() {
             searchHistory.value += "Keyword: $keyword\n"
         }
 
-        searchHistory.addSource(repoFound) { searchResult ->
-            searchHistory.value += "Result: ${searchResult.size}\n"
+        searchHistory.addSource(repoFound) { repoFound ->
+            searchHistory.value += "Result: ${repoFound.size}\n"
         }
     }
 }

@@ -28,7 +28,7 @@ class MainRepository(private val remoteService: RemoteService) {
                 if (response.isSuccessful) {
                     repoFound.postValue(response.body()?.items ?: emptyList())
                 } else {
-                    networkError.postValue(response.errorBody()?.string())
+                    networkError.postValue(response.errorBody()?.string() ?: "unknown error")
                 }
             }
 
