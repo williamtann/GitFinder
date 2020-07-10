@@ -64,9 +64,9 @@ class MainActivity : AppCompatActivity() {
             binding.textHistory.text = textHistory
         })
 
-        viewModel.networkError.observe(this, Observer { errorCause ->
+        viewModel.networkError.observe(this, Observer { errorMessage ->
             binding.textView.visibility = View.GONE
-            Toast.makeText(this, errorCause, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
         })
     }
 
