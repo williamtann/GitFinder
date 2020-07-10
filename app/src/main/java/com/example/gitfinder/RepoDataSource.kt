@@ -29,7 +29,7 @@ class RepoDataSource(
                 networkError.postValue(response.errorBody()?.string() ?: "unknown error")
             }
         } catch (exception: IOException) {
-            networkError.postValue("network error")
+            networkError.postValue(exception.message ?: "unknown error")
         }
     }
 
@@ -44,9 +44,8 @@ class RepoDataSource(
                     call: Call<RepoSearchResponse>,
                     response: Response<RepoSearchResponse>
                 ) {
-                    if (response.isSuccessful) {
-                        val itemList = response.body()?.items ?: emptyList()
-                        callback.onResult(itemList, params.key + 1)
+                    if (response.isSuccessful && response.body() != null) {
+                        callback.onResult(response.body()!!.items, params.key + 1)
                     } else {
                         networkError.postValue(response.errorBody()?.string() ?: "unknown error")
                     }
