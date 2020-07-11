@@ -16,7 +16,7 @@ class RepoListAdapter(
 ) : PagedListAdapter<Repo, RepoListAdapter.CustomViewHolder>(REPO_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
-        val binding = RepoListItemBinding.inflate(LayoutInflater.from(context))
+        val binding = RepoListItemBinding.inflate(LayoutInflater.from(context), parent, false)
         return CustomViewHolder(binding)
     }
 
