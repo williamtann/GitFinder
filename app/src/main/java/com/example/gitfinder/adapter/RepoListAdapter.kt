@@ -16,7 +16,7 @@ class RepoListAdapter(
     var data: List<Repo> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
-        val binding = RepoListItemBinding.inflate(LayoutInflater.from(context))
+        val binding = RepoListItemBinding.inflate(LayoutInflater.from(context), parent, false)
         return CustomViewHolder(binding)
     }
 
