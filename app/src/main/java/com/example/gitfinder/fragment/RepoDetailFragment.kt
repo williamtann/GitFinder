@@ -1,5 +1,8 @@
 package com.example.gitfinder.fragment
 
+import android.content.Intent
+import android.graphics.Paint
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.example.gitfinder.databinding.FragmentRepoDetailBinding
-import com.example.gitfinder.datamodel.Repo
+
 
 class RepoDetailFragment: Fragment() {
 
@@ -37,5 +40,15 @@ class RepoDetailFragment: Fragment() {
             binding.textDescription.visibility = View.VISIBLE
             binding.textDescription.text = repo.description
         }
+
+        binding.textUrl.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        binding.textUrl.text = repo.url
+        binding.textUrl.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(repo.url))
+            startActivity(browserIntent)
+        }
+
+        binding.textStargazer.text = ": ${repo.stargazers}"
+        binding.textWatcher.text = ": ${repo.watchers}"
     }
 }
