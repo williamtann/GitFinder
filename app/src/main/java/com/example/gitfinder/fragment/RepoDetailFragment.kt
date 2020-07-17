@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.example.gitfinder.databinding.FragmentRepoDetailBinding
 
-
 class RepoDetailFragment: Fragment() {
 
     private lateinit var binding: FragmentRepoDetailBinding
@@ -28,7 +27,6 @@ class RepoDetailFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val repo = arguments?.get("repoData") as Repo
         val args: RepoDetailFragmentArgs by navArgs()
         val repo = args.repoData
 
