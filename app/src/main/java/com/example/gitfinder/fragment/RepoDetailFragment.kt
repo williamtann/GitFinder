@@ -8,12 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.gitfinder.databinding.FragmentRepoDetailBinding
+import com.example.gitfinder.datamodel.Repo
 
 class RepoDetailFragment: Fragment() {
 
     private lateinit var binding: FragmentRepoDetailBinding
+    private lateinit var viewModel: RepoDetailViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,9 +31,30 @@ class RepoDetailFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(this).get(RepoDetailViewModel::class.java)
+
         val args: RepoDetailFragmentArgs by navArgs()
         val repo = args.repoData
+        val repoId = args.repoId
 
+        if (repo != null) {
+            updateView(repo)
+        } else if (viewModel.repoId.value == null) {
+            viewModel.setRepoId(repoId)
+        }
+
+        viewModel.repoFetched.observe(viewLifecycleOwner, Observer { repoFetched ->
+            updateView(repoFetched)
+        })
+        viewModel.networkError.observe(viewLifecycleOwner, Observer { errorMessage ->
+            binding.textInfo.text = errorMessage
+        })
+        viewModel.repoId.observe(viewLifecycleOwner, Observer {
+            binding.textInfo.text = "Loading repo data.."
+        })
+    }
+
+    private fun updateView(repo: Repo) {
         binding.textName.text = repo.name
         binding.textFullName.text = repo.fullName
         if (repo.description.isNullOrEmpty()) {
@@ -48,5 +73,8 @@ class RepoDetailFragment: Fragment() {
 
         binding.textStargazer.text = ": ${repo.stargazers}"
         binding.textWatcher.text = ": ${repo.watchers}"
+
+        binding.layoutData.visibility = View.VISIBLE
+        binding.textInfo.visibility = View.GONE
     }
 }

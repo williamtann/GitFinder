@@ -36,7 +36,7 @@ class HomeFragment: Fragment() {
 
         adapter = RepoListAdapter(requireContext(), object: RepoListAdapter.ItemClickListener {
             override fun onItemClicked(repo: Repo) {
-                val action = HomeFragmentDirections.toRepoDetail(repo)
+                val action = HomeFragmentDirections.toRepoDetail().setRepoData(repo)
                 findNavController().navigate(action)
             }
         })
