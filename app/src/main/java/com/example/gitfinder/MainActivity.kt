@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.updateKeyword(inputtedValue)
         }
 
-        viewModel.searchEnabled.observe(this, Observer { searchEnabled ->
+        viewModel.searchEnabled.observe(this, { searchEnabled ->
             binding.recyclerView.visibility = View.GONE
             binding.textView.visibility = View.VISIBLE
             if (searchEnabled) {
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.repoFound.observe(this, Observer { repoList ->
+        viewModel.repoFound.observe(this, { repoList ->
             if (repoList.isNotEmpty()) {
                 binding.recyclerView.visibility = View.VISIBLE
                 binding.textView.visibility = View.GONE
@@ -62,12 +62,12 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.networkError.observe(this, Observer { errorMessage ->
+        viewModel.networkError.observe(this, { errorMessage ->
             binding.textView.visibility = View.GONE
             Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
         })
 
-        viewModel.searchHistory.observe(this, Observer { searchHistory ->
+        viewModel.searchHistory.observe(this, { searchHistory ->
             binding.textHistory.text = searchHistory
         })
     }
