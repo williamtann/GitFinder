@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
+        binding.recyclerView.itemAnimator = null
 
         binding.buttonSearch.setOnClickListener {
             val inputtedValue = binding.editText.text.toString().trim()
@@ -54,8 +55,7 @@ class MainActivity : AppCompatActivity() {
             if (repoList.isNotEmpty()) {
                 binding.recyclerView.visibility = View.VISIBLE
                 binding.textView.visibility = View.GONE
-                adapter.data = repoList
-                adapter.notifyDataSetChanged()
+                adapter.submitList(repoList)
             } else {
                 binding.textView.text = "No result found, please try with another keyword"
             }

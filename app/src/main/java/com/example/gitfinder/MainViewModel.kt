@@ -1,6 +1,7 @@
 package com.example.gitfinder
 
 import androidx.lifecycle.*
+import androidx.paging.PagedList
 import com.example.gitfinder.datamodel.Repo
 import com.example.gitfinder.service.RemoteService
 import com.example.gitfinder.viewmodel.RepoSearchResult
@@ -25,7 +26,7 @@ class MainViewModel: ViewModel() {
         repository.searchRepo(keyword)
     }
 
-    val repoFound: LiveData<List<Repo>> = Transformations.switchMap(searchResult) { it.data }
+    val repoFound: LiveData<PagedList<Repo>> = Transformations.switchMap(searchResult) { it.data }
 
     val networkError: LiveData<String> = Transformations.switchMap(searchResult) { it.networkError }
 
