@@ -1,12 +1,13 @@
-package com.example.gitfinder
+package com.example.gitfinder.fragment
 
 import androidx.lifecycle.*
 import androidx.paging.PagedList
+import com.example.gitfinder.MainRepository
 import com.example.gitfinder.datamodel.Repo
 import com.example.gitfinder.service.RemoteService
 import com.example.gitfinder.viewmodel.RepoSearchResult
 
-class MainViewModel: ViewModel() {
+class HomeViewModel: ViewModel() {
 
     private val repository = MainRepository(RemoteService.create())
 
