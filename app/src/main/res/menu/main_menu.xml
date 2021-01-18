@@ -7,4 +7,10 @@
         android:title="History"
         app:showAsAction="always"
         android:icon="@drawable/ic_history"/>
+
+    <item
+        android:id="@+id/bookmark"
+        android:title="Bookmark"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_bookmark"/>
 </menu>

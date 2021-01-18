@@ -16,6 +16,13 @@
             app:popExitAnim="@anim/slide_out_right" />
         <deepLink
             app:uri="www.gitfinder.com" />
+        <action
+            android:id="@+id/toBookmark"
+            app:destination="@id/bookmarkFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/repoDetailFragment"
@@ -32,5 +39,17 @@
             android:name="repoId"
             app:argType="long"
             android:defaultValue="0L" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookmarkFragment"
+        android:name="com.example.gitfinder.fragment.BookmarkFragment"
+        android:label="BookmarkFragment" >
+        <action
+            android:id="@+id/toRepoDetail"
+            app:destination="@id/repoDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 </navigation>

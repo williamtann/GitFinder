@@ -1,17 +1,16 @@
 package com.example.gitfinder.fragment
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.*
 import com.example.gitfinder.MainRepository
 import com.example.gitfinder.datamodel.Repo
 import com.example.gitfinder.service.RemoteService
 import com.example.gitfinder.viewmodel.RepoDetailResult
+import kotlinx.coroutines.launch
 
-class RepoDetailViewModel: ViewModel() {
+class RepoDetailViewModel(application: Application): AndroidViewModel(application) {
 
-    private val repository = MainRepository(RemoteService.create())
+    private val repository = MainRepository(RemoteService.create(), application)
 
     private val _repoId: MutableLiveData<Long> = MutableLiveData()
     val repoId: LiveData<Long>
@@ -25,5 +24,9 @@ class RepoDetailViewModel: ViewModel() {
 
     fun setRepoId(id: Long) {
         _repoId.value = id
+    }
+
+    fun saveRepo(repo: Repo) = viewModelScope.launch {
+        repository.saveRepo(repo)
     }
 }

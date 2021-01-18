@@ -1,7 +1,9 @@
 package com.example.gitfinder.fragment
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -88,6 +90,12 @@ class HomeFragment: Fragment() {
             binding.textHistory.visibility =
                 if (binding.textHistory.visibility == View.GONE) View.VISIBLE
                 else View.GONE
+        } else if (item.itemId == R.id.bookmark) {
+            val action = HomeFragmentDirections.toBookmark()
+            findNavController().navigate(action)
+
+            val inputMethodManager = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
         }
         return super.onOptionsItemSelected(item)
     }

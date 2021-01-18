@@ -76,5 +76,9 @@ class RepoDetailFragment: Fragment() {
 
         binding.layoutData.visibility = View.VISIBLE
         binding.textInfo.visibility = View.GONE
+
+        binding.buttonSave.setOnClickListener {
+            viewModel.saveRepo(repo)
+        }
     }
 }

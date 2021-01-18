@@ -1,9 +1,13 @@
 package com.example.gitfinder
 
+import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.example.gitfinder.database.EntityBridge
+import com.example.gitfinder.database.RepoDatabase
 import com.example.gitfinder.datamodel.Repo
 import com.example.gitfinder.service.RemoteService
 import com.example.gitfinder.viewmodel.RepoDetailResult
@@ -12,7 +16,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainRepository(private val remoteService: RemoteService) {
+class MainRepository(private val remoteService: RemoteService, private val application: Application) {
+
+    private val database by lazy { RepoDatabase.getDatabase(application) }
 
     fun searchRepo(query: String): RepoSearchResult {
         val pagedListConfig = PagedList.Config.Builder()
@@ -47,5 +53,29 @@ class MainRepository(private val remoteService: RemoteService) {
         })
 
         return RepoDetailResult(result, networkError)
+    }
+
+    suspend fun saveRepo(repo: Repo) {
+        database.repoDao().insertRepo(EntityBridge.repoDataModelToEntity(repo))
+    }
+
+    fun getSavedRepo(): LiveData<List<Repo>> = Transformations.map(database.repoDao().getRepoList()) { entityList ->
+        val repoList = mutableListOf<Repo>()
+        for (entity in entityList) {
+            repoList.add(EntityBridge.repoEntityToDataModel(entity))
+        }
+        repoList
+    }
+
+    fun getPagedSavedRepo(): LiveData<PagedList<Repo>> {
+        val pagedListConfig = PagedList.Config.Builder()
+            .setInitialLoadSizeHint(20)
+            .setPageSize(10)
+            .build()
+        val dataFactory = database.repoDao().getRepoPagedList().map { repoEntity ->
+            EntityBridge.repoEntityToDataModel(repoEntity)
+        }
+
+        return LivePagedListBuilder<Int, Repo>(dataFactory, pagedListConfig).build()
     }
 }
