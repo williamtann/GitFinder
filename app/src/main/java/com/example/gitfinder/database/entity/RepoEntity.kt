@@ -13,5 +13,6 @@ data class RepoEntity(
     @ColumnInfo(name = "html_url") val url: String,
     @ColumnInfo(name = "description") val description: String?,
     @ColumnInfo(name = "stargazers_count") val stargazers: Int,
-    @ColumnInfo(name = "watchers_count") val watchers: Int
+    @ColumnInfo(name = "watchers_count") val watchers: Int,
+    @ColumnInfo(name = "note") val note: String?
 )

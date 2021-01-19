@@ -12,6 +12,7 @@ import com.example.gitfinder.datamodel.Repo
 
 class RepoListAdapter(
     private val context: Context,
+    private val showRemoveIcon: Boolean,
     private val listener: ItemClickListener
 ) : PagedListAdapter<Repo, RepoListAdapter.CustomViewHolder>(REPO_COMPARATOR) {
 
@@ -33,6 +34,12 @@ class RepoListAdapter(
                 binding.textDescription.visibility = View.VISIBLE
                 binding.textDescription.text = repo.description
             }
+
+            binding.iconRemove.visibility = if (showRemoveIcon) View.VISIBLE else View.GONE
+            binding.iconRemove.setOnClickListener {
+                listener.onRemoveClicked(repo)
+            }
+
             binding.root.setOnClickListener { listener.onItemClicked(repo) }
         }
     }
@@ -41,6 +48,7 @@ class RepoListAdapter(
 
     interface ItemClickListener {
         fun onItemClicked(repo: Repo)
+        fun onRemoveClicked(repo: Repo) {}
     }
 
     companion object {

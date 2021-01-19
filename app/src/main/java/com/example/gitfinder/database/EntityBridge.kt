@@ -13,7 +13,8 @@ object EntityBridge {
             dataModel.url,
             dataModel.description,
             dataModel.stargazers,
-            dataModel.watchers
+            dataModel.watchers,
+            dataModel.note
         )
 
     fun repoEntityToDataModel(entity: RepoEntity): Repo =
@@ -24,6 +25,7 @@ object EntityBridge {
             entity.url,
             entity.description,
             entity.stargazers,
-            entity.watchers
+            entity.watchers,
+            entity.note
         )
 }

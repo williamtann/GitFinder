@@ -33,15 +33,18 @@ class BookmarkFragment: Fragment() {
 
         viewModel = ViewModelProvider(this).get(BookmarkViewModel::class.java)
 
-        adapter = RepoListAdapter(requireContext(), object: RepoListAdapter.ItemClickListener {
+        adapter = RepoListAdapter(requireContext(), true, object: RepoListAdapter.ItemClickListener {
             override fun onItemClicked(repo: Repo) {
-                val action = HomeFragmentDirections.toRepoDetail().setRepoData(repo)
+                val action = HomeFragmentDirections.toRepoDetail().setRepoData(repo).setFromCache(true)
                 findNavController().navigate(action)
+            }
+
+            override fun onRemoveClicked(repo: Repo) {
+                viewModel.removeRepo(repo)
             }
         })
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.itemAnimator = null
 
         viewModel.pagedSavedRepo.observe(viewLifecycleOwner, Observer { repoList ->
             adapter.submitList(repoList)

@@ -29,4 +29,8 @@ class RepoDetailViewModel(application: Application): AndroidViewModel(applicatio
     fun saveRepo(repo: Repo) = viewModelScope.launch {
         repository.saveRepo(repo)
     }
+
+    fun updateRepo(id: Long, note: String?) = viewModelScope.launch {
+        repository.updateRepo(id, note)
+    }
 }

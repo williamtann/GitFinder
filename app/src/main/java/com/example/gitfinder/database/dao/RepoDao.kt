@@ -16,4 +16,16 @@ interface RepoDao {
 
     @Query("SELECT * FROM table_repo ORDER BY name ASC")
     fun getRepoPagedList(): DataSource.Factory<Int, RepoEntity>
+
+    @Query("DELETE FROM table_repo")
+    suspend fun clearRepo()
+
+    @Query("DELETE FROM table_repo WHERE id = :id")
+    suspend fun deleteRepo(id: Long)
+
+    @Delete
+    suspend fun deleteRepo(repo: RepoEntity)
+
+    @Query("UPDATE table_repo SET note = :note WHERE id = :id")
+    suspend fun updateRepo(id: Long, note: String?)
 }

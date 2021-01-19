@@ -39,6 +39,10 @@
             android:name="repoId"
             app:argType="long"
             android:defaultValue="0L" />
+        <argument
+            android:name="fromCache"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/bookmarkFragment"

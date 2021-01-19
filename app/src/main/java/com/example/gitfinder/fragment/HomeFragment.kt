@@ -36,7 +36,7 @@ class HomeFragment: Fragment() {
 
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
-        adapter = RepoListAdapter(requireContext(), object: RepoListAdapter.ItemClickListener {
+        adapter = RepoListAdapter(requireContext(), false, object: RepoListAdapter.ItemClickListener {
             override fun onItemClicked(repo: Repo) {
                 val action = HomeFragmentDirections.toRepoDetail().setRepoData(repo)
                 findNavController().navigate(action)

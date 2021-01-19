@@ -78,4 +78,20 @@ class MainRepository(private val remoteService: RemoteService, private val appli
 
         return LivePagedListBuilder<Int, Repo>(dataFactory, pagedListConfig).build()
     }
+
+    suspend fun clearRepo() {
+        database.repoDao().clearRepo()
+    }
+
+    suspend fun removeRepo(id: Long) {
+        database.repoDao().deleteRepo(id)
+    }
+
+    suspend fun removeRepo(repo: Repo) {
+        database.repoDao().deleteRepo(EntityBridge.repoDataModelToEntity(repo))
+    }
+
+    suspend fun updateRepo(id: Long, note: String?) {
+        database.repoDao().updateRepo(id, note)
+    }
 }

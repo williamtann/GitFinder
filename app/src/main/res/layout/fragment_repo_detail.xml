@@ -63,13 +63,20 @@
                 android:tint="#000"
                 android:layout_marginStart="8dp"
                 android:src="@drawable/ic_watcher"/>
-
+            
             <TextView
                 android:id="@+id/textWatcher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"/>
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/textNote"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="4dp"
+            android:hint="Personal Note"/>
 
         <Button
             android:id="@+id/buttonSave"

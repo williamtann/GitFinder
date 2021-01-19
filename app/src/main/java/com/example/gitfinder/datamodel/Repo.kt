@@ -13,5 +13,6 @@ data class Repo (
     @field:SerializedName("html_url") val url: String,
     @field:SerializedName("description") val description: String?,
     @field:SerializedName("stargazers_count") val stargazers: Int,
-    @field:SerializedName("watchers_count") val watchers: Int
+    @field:SerializedName("watchers_count") val watchers: Int,
+    val note: String?
 ) : Parcelable
